@@ -2,12 +2,26 @@
   <div class="container">
     <van-nav-bar
       title="标题"
-      right-text="发布"
       style="position:fixed;top:0;left:0;right:0;"
-      @click-right="onClickaddlist"
       @click-left="$router.go(-1)"
     >
-      <van-icon name="arrow-left" slot="left" size=".5rem" color="#ccc" />
+      <van-icon
+        name="arrow-left"
+        slot="left"
+        size=".5rem"
+        color="#ccc"
+      />
+      <van-button
+        type="info"
+        size="small"
+        style="border-radius:5px;"
+        class="postBtn"
+        @click="postAddlist"
+        slot="right"
+        :disabled="this.listdata.content + '' === ''"
+      >
+        发表
+      </van-button>
     </van-nav-bar>
     <div class="container_center">
       <van-field
@@ -17,7 +31,12 @@
         :border="false"
         placeholder="请输入用户名"
       />
-      <van-uploader v-model="imgdatalst" accept="image/*" :after-read="afterRead" multiple />
+      <van-uploader
+        v-model="imgdatalst"
+        accept="image/*"
+        :after-read="afterRead"
+        multiple 
+      />
     </div>
   </div>
 </template>
@@ -37,7 +56,9 @@ export default {
       imgdatalst: []
     };
   },
-  async created() {},
+  async created() {
+    
+  },
   methods: {
     afterRead(file) {
       const fromdata = new FormData();
@@ -63,20 +84,16 @@ export default {
       //  this.$http.post({url:'/upload',data:datfromdataa})
     },
 
-    async onClickaddlist() {
+    async postAddlist() {
       this.listdata.imgurl = JSON.stringify(this.listdata.imgurl);
       try {
         const res = await postaddlist(this.listdata);
         if (res.code === 0) {
           this.$router.push("/");
         }
-      } catch (error) {}
-      // const res = await postaddlist(this.listdata).then(()=>{
-      //   console.log('提交成功',res)
-      //   this.$router.push('/')
-      // }).file(()=>{
-      //   console.log('提交失败')
-      // })
+      } catch (error) {
+
+      }
     }
   }
 };
@@ -92,5 +109,9 @@ export default {
 .container_center {
   /* margin-top: 0.8rem; */
   padding: 0.8rem 0.3rem;
+}
+.postBtn{
+  border-radius: 5px !important;
+  /* color:#999 !important; */
 }
 </style>
