@@ -77,7 +77,7 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    let message: string = error.message
+    let message = error.message
     if (error.response) {
       switch (error.response.status) {
         case 400:

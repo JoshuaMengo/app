@@ -23,9 +23,9 @@ export default new VueRouter({
         component: () => import('@/page/ins.vue'),
     },
     {
-        path: '/list',
-        name:'list',
-        component: () => import('@/components/list.vue'),
+        path: '/publish',
+        name:'publish',
+        component: () => import('@/page/publish.vue'),
     },
     {
         path: '/detail',

@@ -7,13 +7,12 @@ import request from '@/api/request'
  * @author 小道仙
  * @date 2020年2月19日
  */
-export function index(data) {
-    return request({
+export const index = (data) =>
+    request({
         url: '/list',
         method: 'get',
         data
     })
-}
 export function postaddlist(data) {
     return request({
         url: '/addlist',
@@ -26,5 +25,18 @@ export function postuploader(data) {
         url: '/upload',
         method: 'post',
         data
+    })
+}
+
+// export function getDeleteDiary = (aid) => {
+//     return request({
+//         url: '/destroy/id='+aid,
+//         method: 'delete',
+//     })
+// }
+export const  getDeleteDiary = (id) => {
+    request({
+        url: `/destroy/${id}`,
+        method: 'get',
     })
 }

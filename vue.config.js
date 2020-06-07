@@ -14,7 +14,7 @@ const backEndServer = 'http://127.0.0.1:7001'
 module.exports = {
   assetsDir: 'static',
   publicPath: process.env.NODE_ENV === 'production' ? '' : '',
-  lintOnSave: process.env.NODE_ENV === 'development',
+  lintOnSave: process.env.NODE_ENV === 'false',
   productionSourceMap: false,
   devServer: {
     disableHostCheck: true,
