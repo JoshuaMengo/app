@@ -1,9 +1,15 @@
 <template>
   <div class="container">
-    <van-popup v-model="show" position="left" :style="{ height: '100%' ,width:'80%'}" >
+    <van-popup v-model="show" position="left" :style="{ height: '100%' ,width:'80%'}">
       <Popup />
     </van-popup>
-    <Navbar @childrenGolist="golist" @openMenu="openMenu" />
+    <Navbar 
+      @clickRight="openPickDate" 
+      :leftIcon="'wap-nav'" 
+      :rightIcon="'calender-o'" 
+      @clickleft="openMenu" 
+      :title="'Johnson的日常'"
+    />
     <div class="list_container">
       <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
         <!-- <div class="list_item" @click="godetail" v-for="(item,index) in datalist" :key="index">
@@ -13,7 +19,7 @@
           <div class="item_tit">{{ item.content ? item.content : '' }}</div>
           <div class="item_time">{{ item.createdAt ? item.createdAt : '' }}</div>
         </div>-->
-        <InsImg :datalist="datalist" />
+        <InsImg :datalist="datalist" @Refresh="onRefresh" />
       </van-pull-refresh>
     </div>
     <tagbar />
@@ -49,18 +55,27 @@ export default {
     };
   },
   async created() {
-    const _this = this;
-    const res = await index();
-    if (res.code === 0) {
-      _this.datalist = res.data.rows.map(el => {
-        el.imgurl = JSON.parse(el.imgurl);
-        return el;
-      });
-      _this.datalist = _this.datalist.reverse();
-    }
-    console.log(_this.datalist, res, "111111");
+    await this.getdatalist()
   },
   methods: {
+    openPickDate(){
+
+    },
+    async getdatalist(){
+      try {
+        const res = await index();
+        if (res.code === 0) {
+          this.datalist = res.data.rows.map(el => {
+            el.imgurl = JSON.parse(el.imgurl);
+            return el;
+          });
+          this.datalist = this.datalist.reverse();
+        }
+      } catch (error) {
+        
+      }
+    },
+
     openMenu() {
       console.log("~~~~~~~");
       this.show = true;
@@ -72,8 +87,9 @@ export default {
       this.$router.push("/detail");
     },
     onRefresh() {
-      setTimeout(() => {
-        this.$toast("刷新成功");
+      setTimeout(async() => {
+        await this.getdatalist()
+        // this.$toast("刷新成功");
         this.isLoading = false;
         this.count++;
       }, 1000);

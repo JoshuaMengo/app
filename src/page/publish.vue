@@ -1,15 +1,15 @@
 <template>
   <div class="container">
     <van-nav-bar
-      title="标题"
+      title=""
       style="position:fixed;top:0;left:0;right:0;"
-      @click-left="$router.go(-1)"
+      @click-left="goback()"
     >
       <van-icon
         name="arrow-left"
         slot="left"
         size=".5rem"
-        color="#ccc"
+        color="#ccc" 
       />
       <van-button
         type="info"
@@ -23,6 +23,7 @@
         发表
       </van-button>
     </van-nav-bar>
+
     <div class="container_center">
       <van-field
         v-model="listdata.content"
@@ -41,11 +42,16 @@
   </div>
 </template>
 <script>
+import { Dialog } from "vant";
 import { postaddlist } from "@/api/api"; //postuploader
 export default {
   name: "list",
   props: {
     msg: String
+  },
+  components: {
+    [Dialog.Component.name]: Dialog.Component,
+
   },
   data() {
     return {
@@ -56,13 +62,25 @@ export default {
       imgdatalst: []
     };
   },
+  
   async created() {
     
   },
+
   methods: {
-    afterRead(file) {
+    //图片上传
+    async afterRead(file) {
       const fromdata = new FormData();
       fromdata.append("file", file.file);
+      // try{
+      //   const res = await postaddlist(fromdata)
+      //   if (res.code === 200) {
+      //       this.listdata.imgurl.push(res.data.imgUrl);
+      //       console.log("-----------------", this.listdata);
+      //   }
+      // }catch{
+
+      // }
       this.$axios({
         method: "POST",
         url: "/upload",
@@ -78,7 +96,6 @@ export default {
         .catch(err => {
           console.log(err, "11111");
         });
-
       //  const res = await postuploader(fromdata)
       //将原图片显示为选择的图片
       //  this.$http.post({url:'/upload',data:datfromdataa})
@@ -91,9 +108,19 @@ export default {
         if (res.code === 0) {
           this.$router.push("/");
         }
-      } catch (error) {
+      } catch (error) {}
+    },
 
-      }
+    goback() {
+      Dialog.confirm({
+        message: "是否退出编辑"
+      })
+        .then(() => {
+          this.$router.push('/');
+        })
+        .catch(() => {
+          // on cancel
+        });
     }
   }
 };
@@ -102,16 +129,14 @@ export default {
 <style scoped>
 .container {
   width: 100%;
-  /* height:100; */
   background: white;
   height: 100vh;
 }
 .container_center {
-  /* margin-top: 0.8rem; */
   padding: 0.8rem 0.3rem;
 }
-.postBtn{
-  border-radius: 5px !important;
-  /* color:#999 !important; */
+.postBtn {
+  border-radius: 5px!important;
 }
 </style>
+
